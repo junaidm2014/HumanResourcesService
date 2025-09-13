@@ -17,9 +17,9 @@ namespace HumanResourcesService.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var departments = _departmentService.GetAll();
+            var departments = await _departmentService.GetAllAsync();
             var dtos = departments.Select(d => new DepartmentDTO
             {
                 DepartmentId = d.DepartmentId,
@@ -29,9 +29,9 @@ namespace HumanResourcesService.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var department = _departmentService.GetById(id);
+            var department = await _departmentService.GetByIdAsync(id);
             if (department == null) return NotFound();
             var dto = new DepartmentDTO
             {
@@ -42,37 +42,37 @@ namespace HumanResourcesService.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(DepartmentDTO dto)
+        public async Task<IActionResult> AddAsync(DepartmentDTO dto)
         {
             var department = new Department
             {
                 DepartmentId = dto.DepartmentId,
                 Name = dto.Name
             };
-            var success = _departmentService.TryAddDepartment(department);
+            var success = await _departmentService.TryAddDepartmentAsync(department);
             if (!success)
             {
                 return BadRequest("DepartmentId must be unique.");
             }
-            return CreatedAtAction(nameof(GetById), new { id = department.DepartmentId }, dto);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = department.DepartmentId }, dto);
         }
 
         [HttpPut]
-        public IActionResult Update(DepartmentDTO dto)
+        public async Task<IActionResult> UpdateAsync(DepartmentDTO dto)
         {
             var department = new Department
             {
                 DepartmentId = dto.DepartmentId,
                 Name = dto.Name
             };
-            _departmentService.Update(department);
+            await _departmentService.UpdateAsync(department);
             return NoContent();
         }
 
         [HttpDelete("{departmentId}")]
-        public IActionResult Delete(int departmentId)
+        public async Task<IActionResult> DeleteAsync(int departmentId)
         {
-            _departmentService.Delete(departmentId);
+            await _departmentService.DeleteAsync(departmentId);
             return NoContent();
         }
     }

@@ -12,39 +12,41 @@ namespace HumanResourcesService.Services
             _departmentRepository = departmentRepository;
         }
 
-        public bool TryAddDepartment(Department department)
+        public async Task<bool> TryAddDepartmentAsync(Department department)
         {
             // Check for uniqueness of DepartmentId
-            var existing = _departmentRepository.GetAll().FirstOrDefault(d => d.DepartmentId == department.DepartmentId);
+            var departments = await _departmentRepository.GetAllAsync();
+            var existing = departments.FirstOrDefault(d => d.DepartmentId == department.DepartmentId);
             if (existing != null)
             {
                 return false;
             }
-            _departmentRepository.Add(department);
+            await _departmentRepository.AddAsync(department);
             return true;
         }
 
-        public IEnumerable<Department> GetAll()
+        public async Task<IEnumerable<Department>> GetAllAsync()
         {
-            return _departmentRepository.GetAll();
+            return await _departmentRepository.GetAllAsync();
         }
 
-        public Department GetById(int id)
+        public async Task<Department> GetByIdAsync(int id)
         {
-            return _departmentRepository.GetById(id);
+            return await _departmentRepository.GetByIdAsync(id);
         }
 
-        public void Update(Department department)
+        public async Task UpdateAsync(Department department)
         {
-            _departmentRepository.Update(department);
+            await _departmentRepository.UpdateAsync(department);
         }
 
-        public void Delete(int departmentId)
+        public async Task DeleteAsync(int departmentId)
         {
-            var department = _departmentRepository.GetAll().FirstOrDefault(d => d.DepartmentId == departmentId);
+            var departments = await _departmentRepository.GetAllAsync();
+            var department = departments.FirstOrDefault(d => d.DepartmentId == departmentId);
             if (department != null)
             {
-                _departmentRepository.Delete(department.Id);
+                await _departmentRepository.DeleteAsync(department.Id);
             }
         }
     }

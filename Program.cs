@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,9 +7,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register CSV repositories for now
-builder.Services.AddSingleton<HumanResourcesService.Repositories.IEmployeeRepository, HumanResourcesService.Repositories.EmployeeCsvRepository>();
-builder.Services.AddSingleton<HumanResourcesService.Repositories.IDepartmentRepository, HumanResourcesService.Repositories.DepartmentCsvRepository>();
+// register EF repositories
+builder.Services.AddDbContext<HumanResourcesService.Data.HumanResourcesDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<HumanResourcesService.Repositories.IEmployeeRepository, HumanResourcesService.Repositories.EmployeeRepository>();
+builder.Services.AddScoped<HumanResourcesService.Repositories.IDepartmentRepository, HumanResourcesService.Repositories.DepartmentRepository>();
 
 var app = builder.Build();
 
@@ -26,8 +29,3 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
-
-// record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-// {
-//     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-// }

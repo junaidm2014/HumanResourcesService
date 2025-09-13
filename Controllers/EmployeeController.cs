@@ -17,9 +17,9 @@ namespace HumanResourcesService.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var employees = _employeeService.GetAll();
+            var employees = await _employeeService.GetAllAsync();
             var dtos = employees.Select(e => new EmployeeDTO
             {
                 EmployeeId = e.EmployeeId,
@@ -33,9 +33,9 @@ namespace HumanResourcesService.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var employee = _employeeService.GetById(id);
+            var employee = await _employeeService.GetByIdAsync(id);
             if (employee == null) return NotFound();
             var dto = new EmployeeDTO
             {
@@ -50,7 +50,7 @@ namespace HumanResourcesService.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(EmployeeDTO dto)
+        public async Task<IActionResult> AddAsync(EmployeeDTO dto)
         {
             var employee = new Employee
             {
@@ -61,16 +61,16 @@ namespace HumanResourcesService.Controllers
                 Compensation = dto.Compensation,
                 DepartmentId = dto.DepartmentId
             };
-            var success = _employeeService.TryAddEmployee(employee);
+            var success = await _employeeService.TryAddEmployeeAsync(employee);
             if (!success)
             {
                 return BadRequest("Department does not exist.");
             }
-            return CreatedAtAction(nameof(GetById), new { id = employee.Id }, dto);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = employee.Id }, dto);
         }
 
         [HttpPut]
-        public IActionResult Update(EmployeeDTO dto)
+        public async Task<IActionResult> UpdateAsync(EmployeeDTO dto)
         {
             var employee = new Employee
             {
@@ -80,14 +80,14 @@ namespace HumanResourcesService.Controllers
                 Compensation = dto.Compensation,
                 DepartmentId = dto.DepartmentId
             };
-            _employeeService.Update(employee);
+            await _employeeService.UpdateAsync(employee);
             return NoContent();
         }
 
         [HttpPut("disable/{employeeId}")]
-        public IActionResult Disable(int employeeId)
+        public async Task<IActionResult> DisableAsync(int employeeId)
         {
-            _employeeService.Disable(employeeId);
+            await _employeeService.DisableAsync(employeeId);
             return NoContent();
         }
     }

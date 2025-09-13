@@ -14,50 +14,55 @@ namespace HumanResourcesService.Services
             _departmentRepository = departmentRepository;
         }
 
-        public bool TryAddEmployee(Employee employee)
+        public async Task<bool> TryAddEmployeeAsync(Employee employee)
         {
-            var department = _departmentRepository.GetById(employee.DepartmentId);
+            var department = await _departmentRepository.GetByIdAsync(employee.DepartmentId);
             if (department == null)
             {
                 return false;
             }
-            _employeeRepository.Add(employee);
+            await _employeeRepository.AddAsync(employee);
             return true;
         }
 
-        public IEnumerable<Employee> GetAll()
+        public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            return _employeeRepository.GetAll();
+            return await _employeeRepository.GetAllAsync();
         }
 
-        public Employee GetById(int id)
+        public async Task<Employee> GetByIdAsync(int id)
         {
-            return _employeeRepository.GetById(id);
+            return await _employeeRepository.GetByIdAsync(id);
         }
 
-        public void Update(Employee employee)
+        public async Task UpdateAsync(Employee employee)
         {
-            _employeeRepository.Update(employee);
+            await _employeeRepository.UpdateAsync(employee);
         }
 
-        public void Disable(int employeeId)
+        public async Task DisableAsync(int employeeId)
         {
-            var employee = _employeeRepository.GetAll().FirstOrDefault(e => e.EmployeeId == employeeId);
+            var x = new List<int> { 1, 2, 3 };
+            x.FirstOrDefault(a => a == 2);
+            var employees = await _employeeRepository.GetAllAsync();
+            var employee = employees.FirstOrDefault(e => e.EmployeeId == employeeId);
+            //.FirstOrDefault(e => e.EmployeeId == employeeId);
             if (employee != null)
             {
-                _employeeRepository.Disable(employee.Id);
+                await _employeeRepository.DisableAsync(employee.Id);
             }
         }
 
-        public void Delete(int employeeId)
+        public async Task DeleteAsync(int employeeId)
         {
-            var employee = _employeeRepository.GetAll().FirstOrDefault(e => e.EmployeeId == employeeId);
+            var employees = await _employeeRepository.GetAllAsync();
+            var employee = employees.FirstOrDefault(e => e.EmployeeId == employeeId);
             if (employee != null)
             {
+                await DisableAsync(employeeId);
                 // Implement repository delete if needed
-                // _employeeRepository.Delete(employee.Id);
+                // await _employeeRepository.DeleteAsync(employee.Id);
             }
-    // ...existing code...
         }
     }
 }
