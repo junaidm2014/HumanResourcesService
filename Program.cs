@@ -12,6 +12,10 @@ builder.Services.AddDbContext<HumanResourcesService.Data.HumanResourcesDbContext
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<HumanResourcesService.Repositories.IEmployeeRepository, HumanResourcesService.Repositories.EmployeeRepository>();
 builder.Services.AddScoped<HumanResourcesService.Repositories.IDepartmentRepository, HumanResourcesService.Repositories.DepartmentRepository>();
+// builder.Services.AddScoped<DepartmentService>();
+// builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<HumanResourcesService.Services.DepartmentService>();
+builder.Services.AddScoped<HumanResourcesService.Services.EmployeeService>();
 
 var app = builder.Build();
 
