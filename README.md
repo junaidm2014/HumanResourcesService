@@ -60,9 +60,23 @@ HumanResourcesService/
 ## Configuration
 - Update connection strings and settings in `appsettings.json` and `appsettings.Development.json` as needed.
 
-## Database
-- Uses SQLite (`HumanResources.db`).
-- Entity Framework Core handles migrations and data access.
+
+## Database Setup
+
+The SQLite database is stored in the `sqlite3-db` subfolder.
+
+To set up the database:
+1. Create the folder (if it doesn't exist):
+	```bash
+	mkdir -p sqlite3-db
+	```
+2. Apply Entity Framework Core migrations:
+	```bash
+	dotnet ef database update
+	```
+This will create `HumanResources.db` in `sqlite3-db/` as configured in `appsettings.json`.
+
+Entity Framework Core handles migrations and data access.
 
 ## Authentication
 - Basic authentication stub included in `Authentication/AuthStub.cs`.
