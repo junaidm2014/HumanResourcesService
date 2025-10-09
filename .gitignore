@@ -1,2 +1,5 @@
 /bin
 /obj
+
+# Ignore local SQLite database
+/sqlite3-db/
